@@ -103,13 +103,17 @@ public class FxController {
 
         //check all data inputs are correct
         String incorrectDataField = inputDataVerifiedForSecondScene();
+
         if (!"ok".equals(incorrectDataField)) {
             bottomConsolePrint("Проверьте корректность данных в поле ввода " + incorrectDataField);
             isPressedFireLogic = false;
             return;
         }
-
         bottomConsolePrint("Ведённые данные корректны. Расчёт начат.");
+        // ----------------------------------------------------------------------------------------------------
+        // -- different cases to choose right methode to start calculations
+
+
         if (!detailedIOChecked.isSelected()) {
             taskInfo.put(ChannelType.DI, Integer.parseInt(DIchannelInput.getText()));
             taskInfo.put(ChannelType.DO, Integer.parseInt(DOchannelInput.getText()));
