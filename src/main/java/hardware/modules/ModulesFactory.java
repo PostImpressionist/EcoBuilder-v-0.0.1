@@ -17,12 +17,12 @@ public class ModulesFactory {
             case DOC8H: return new DOC8H();
             case AO8: return new AO8();
             case AO8H: return new AO8H();
-            case AO8V: return new AO8V();
-            case AO8VH: return new AO8VH();
+            case AOV8: return new AOV8();
+            case AOV8H: return new AOV8H();
             case UI8AO4: return new UI8AO4();
             case UI8AO4H: return new UI8AO4H();
-            case UI8AO4V: return new UI8AO4V();
-            case UI8AO4VH: return new UI8AO4VH();
+            case UI8AOV4: return new UI8AOV4();
+            case UI8AOV4H: return new UI8AOV4H();
             case UI8DOC4: return new UI8DOC4();
             case UI8DOC4H: return new UI8DOC4H();
             default: throw new ModuleCreationException(moduleType);

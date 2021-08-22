@@ -7,12 +7,12 @@ import hardware.modules.ModuleType;
 
 import java.util.Objects;
 
-public class UI8AO4VH extends Module {
+public class AOV8 extends Module {
 
-    private final ModuleType moduleType = ModuleType.UI8AO4VH;
-    private final ChannelType channelType = ChannelType.MixedAOvolt;
+    private final ModuleType moduleType = ModuleType.AOV8;
+    private final ChannelType channelType = ChannelType.AOvolt;
 
-    public UI8AO4VH() throws ModuleDataLoadException {
+    public AOV8() throws ModuleDataLoadException {
         super.setModuleType(moduleType);
         super.setChannelType(channelType);
         super.dataLoad();
@@ -23,8 +23,8 @@ public class UI8AO4VH extends Module {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        UI8AO4VH ui8AO4VH = (UI8AO4VH) o;
-        return moduleType == ui8AO4VH.moduleType && channelType == ui8AO4VH.channelType;
+        AOV8 ao8V = (AOV8) o;
+        return moduleType == ao8V.moduleType && channelType == ao8V.channelType;
     }
 
     @Override

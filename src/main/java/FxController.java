@@ -1,5 +1,6 @@
 import channels.ChannelType;
 import datafulfiller.DataSaver;
+import datafulfiller.ModulesData;
 import exceptions.*;
 import hardware.modules.Module;
 import javafx.event.ActionEvent;
@@ -46,7 +47,8 @@ public class FxController {
     public TextField AOCurrentChannelWide;  // AOCurrent inputs amount input
     public TextField AOvoltChannelWide;     // AOvolt inputs amount input
     public TextField UIchannelWide;         // UI inputs amount input
-    public TextField TIchannelWide;
+    public TextField TIchannelWide;         // TI inputs amount input
+    public TextField reserve;               // reserve in % from all IOs
 
 
     private boolean isPressedTariffLoader = false;  // welcome scene button to start tariff parsing
@@ -68,13 +70,13 @@ public class FxController {
     public void buttonTariffLoader() {
         bottomConsolePrint("Working on tariff file parsing...");
         System.out.println("nextStep");
-        if (isPressedTariffLoader == false) {
+        if (!isPressedTariffLoader) {
             System.out.println("Button clicked!");
             isPressedTariffLoader = true;
             String path = pathToTariff.getText();
             try {
                 if (model.dataInitFromTariff(path)) {
-                   // Thread.currentThread().sleep(1000);
+                    // Thread.currentThread().sleep(1000);
                     bottomConsolePrint("Данные успешно выгружены из тарифа. " +
                             "Задайте настройки расчёта и нажмите кнопку \"Рассчитать\"");
                     changeScene("/second.fxml");
@@ -82,7 +84,7 @@ public class FxController {
                 }
 
             } catch (TariffParsingException | IOException e) {
-                bottomConsolePrint(e.toString() + " \nВведите корректный путь к файлу тарифа");
+                bottomConsolePrint(e + " \nВведите корректный путь к файлу тарифа");
                 e.printStackTrace();
                 isPressedTariffLoader = false;
             }
@@ -108,13 +110,12 @@ public class FxController {
         }
 
         bottomConsolePrint("Ведённые данные корректны. Расчёт начат.");
-
-        if(!detailedIOChecked.isSelected()) {
+        if (!detailedIOChecked.isSelected()) {
             taskInfo.put(ChannelType.DI, Integer.parseInt(DIchannelInput.getText()));
             taskInfo.put(ChannelType.DO, Integer.parseInt(DOchannelInput.getText()));
             taskInfo.put(ChannelType.UI, Integer.parseInt(UIchannelInput.getText()));
             taskInfo.put(ChannelType.AO, Integer.parseInt(AOchannelInput.getText()));
-        }else {
+        } else {
             taskInfo.put(ChannelType.DI, Integer.parseInt(DIchannelWide.getText()));
             taskInfo.put(ChannelType.DOformC, Integer.parseInt(DOformCWide.getText()));
             taskInfo.put(ChannelType.DOformA, Integer.parseInt(DOformAWide.getText()));
@@ -123,17 +124,25 @@ public class FxController {
             taskInfo.put(ChannelType.UI, Integer.parseInt(UIchannelWide.getText()));
             taskInfo.put(ChannelType.TI, Integer.parseInt(TIchannelWide.getText()));
         }
+
+        int reserv = Integer.parseInt(reserve.getText());
+        if (reserv != 0) {
+            for (ChannelType key : taskInfo.keySet()) {
+                taskInfo.merge(key, (taskInfo.get(key) * reserv) / 100, Integer::sum);
+            }
+        }
         ModulesCounter modulesCounter = new ModulesCounter();
-        Set<Module> set = modulesCounter.modulesCalc(taskInfo);
-        set.forEach(System.out::println);
+        Set<Module> moduleSet = modulesCounter.modulesCalc(taskInfo, handModulesCheked.isSelected());
+
+        moduleSet.forEach(System.out::println);
 
 
-        DataSaver.saveCulculations(pathToResultFolder.getText(), set, cabinetName.getText());
+        DataSaver.saveCulculations(pathToResultFolder.getText(), moduleSet, cabinetName.getText());
 
         bottomConsolePrint("Расчёт закончен");
     }
 
-    // if IO channels detalisation is checked up
+    // if IO channels detalization is checked up
     @FXML
     public void detailedIOMode(ActionEvent actionEvent) {
         // checkBox is selected
@@ -156,28 +165,29 @@ public class FxController {
             RPCChecked.setDisable(false);
             handModulesCheked.setDisable(false);
         } else {
-            ASPChecked.setDisable(true); ASPChecked.setSelected(false);
-            ASBChecked.setDisable(true); ASBChecked.setSelected(false);
-            MPCChecked.setDisable(true); MPCChecked.setSelected(false);
-            RPCChecked.setDisable(true); RPCChecked.setSelected(false);
-            handModulesCheked.setDisable(true); handModulesCheked.setSelected(false);
+            ASPChecked.setDisable(true);
+            ASPChecked.setSelected(false);
+            ASBChecked.setDisable(true);
+            ASBChecked.setSelected(false);
+            MPCChecked.setDisable(true);
+            MPCChecked.setSelected(false);
+            RPCChecked.setDisable(true);
+            RPCChecked.setSelected(false);
+            handModulesCheked.setDisable(true);
+            handModulesCheked.setSelected(false);
         }
     }
 
     // if handMode outputs channels checkBox selected
     @FXML
     public void handOutsMode(ActionEvent actionEvent) {
-        IPIOChecked.setSelected(false);
-        if(!handModulesCheked.isSelected()){
-            IPIOChecked.setDisable(false);
-        } else {
-            IPIOChecked.setDisable(true);
-        }
+        IPIOChecked.setSelected(false);     // uncheck IPIOmodules
+        IPIOChecked.setDisable(handModulesCheked.isSelected());
     }
 
     @FXML
     public void ASPMode(ActionEvent actionEvent) {
-        if(ASPChecked.isSelected()){
+        if (ASPChecked.isSelected()) {
             ASBChecked.setDisable(true);
             MPCChecked.setDisable(true);
             RPCChecked.setDisable(true);
@@ -186,7 +196,7 @@ public class FxController {
             MPCChecked.setSelected(false);
             RPCChecked.setSelected(false);
 
-        } else{
+        } else {
             ASBChecked.setDisable(false);
             MPCChecked.setDisable(false);
             RPCChecked.setDisable(false);
@@ -195,7 +205,7 @@ public class FxController {
 
     @FXML
     public void ASBMode(ActionEvent actionEvent) {
-        if(ASBChecked.isSelected()){
+        if (ASBChecked.isSelected()) {
             ASPChecked.setDisable(true);
             MPCChecked.setDisable(true);
             RPCChecked.setDisable(true);
@@ -204,7 +214,7 @@ public class FxController {
             MPCChecked.setSelected(false);
             RPCChecked.setSelected(false);
 
-        } else{
+        } else {
             ASPChecked.setDisable(false);
             MPCChecked.setDisable(false);
             RPCChecked.setDisable(false);
@@ -213,7 +223,7 @@ public class FxController {
 
     @FXML
     public void MPCMode(ActionEvent actionEvent) {
-        if(MPCChecked.isSelected()){
+        if (MPCChecked.isSelected()) {
             ASPChecked.setDisable(true);
             ASBChecked.setDisable(true);
             RPCChecked.setDisable(true);
@@ -222,7 +232,7 @@ public class FxController {
             ASBChecked.setSelected(false);
             RPCChecked.setSelected(false);
 
-        } else{
+        } else {
             ASPChecked.setDisable(false);
             ASBChecked.setDisable(false);
             RPCChecked.setDisable(false);
@@ -231,7 +241,7 @@ public class FxController {
 
     @FXML
     public void RPCMode(ActionEvent actionEvent) {
-        if(RPCChecked.isSelected()){
+        if (RPCChecked.isSelected()) {
             ASPChecked.setDisable(true);
             ASBChecked.setDisable(true);
             MPCChecked.setDisable(true);
@@ -242,7 +252,7 @@ public class FxController {
             MPCChecked.setSelected(false);
             handModulesCheked.setSelected(false);
 
-        } else{
+        } else {
             ASPChecked.setDisable(false);
             ASBChecked.setDisable(false);
             MPCChecked.setDisable(false);
@@ -269,7 +279,7 @@ public class FxController {
         String result = "ok";
 
         // verify correction IO channels input counts
-        if(detailedIOChecked.isSelected()){
+        if (detailedIOChecked.isSelected()) {
             if (!DIchannelWide.getText().matches("\\d+")) return DIchannelWide.getId();
             if (!DOformCWide.getText().matches("\\d+")) return DOformCWide.getId();
             if (!DOformAWide.getText().matches("\\d+")) return DOformAWide.getId();
@@ -278,7 +288,7 @@ public class FxController {
             if (!UIchannelWide.getText().matches("\\d+")) return UIchannelWide.getId();
             if (!TIchannelWide.getText().matches("\\d+")) return TIchannelWide.getId();
 
-        }else {
+        } else {
 
             if (!DIchannelInput.getText().matches("\\d+")) return DIchannelInput.getId();
             if (!DOchannelInput.getText().matches("\\d+")) return DOchannelInput.getId();
@@ -286,9 +296,14 @@ public class FxController {
             if (!UIchannelInput.getText().matches("\\d+")) return UIchannelInput.getId();
         }
 
+        // verify correction of reserve field. Should be from 0 to 100 only
+        String reserv = reserve.getText();
+        if (reserv == null || ("").equals(reserv) || !reserv.matches("\\d{1,3}") || Integer.parseInt(reserv) > 100)
+            return reserve.getId();
+
         // verify any controller is checked
-        if(!(ASBChecked.isSelected() || ASPChecked.isSelected() || MPCChecked.isSelected() ||
-                RPCChecked.isSelected()) && !IPIOChecked.isSelected() )
+        if (!(ASBChecked.isSelected() || ASPChecked.isSelected() || MPCChecked.isSelected() ||
+                RPCChecked.isSelected()) && !IPIOChecked.isSelected())
             return "выбора типа контроллеров или IPIO модулей";
 
         // verify path to result folder is correct
@@ -296,10 +311,8 @@ public class FxController {
             return pathToResultFolder.getId();
 
 
-
         return result;
     }
-
 
 
 }

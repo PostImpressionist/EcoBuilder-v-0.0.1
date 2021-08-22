@@ -2,6 +2,7 @@ package hardware.modules;
 
 import channels.ChannelType;
 import exceptions.NoModuleForSuchChannelType;
+import hardware.modules.data.aspmodules.DI16;
 
 public enum ModuleType {
     DI16(16, 1.6f, ChannelType.DI, "SXWDI16XX10001"),
@@ -13,14 +14,14 @@ public enum ModuleType {
     TI16(16, 1.6f, ChannelType.TI,"SXWRTD16X10001"),
     UI8AO4(8, 4, 3.2f,ChannelType.MixedAOcurrent, "SXWUI8A4X10001"),
     UI8AO4H(8, 4, 3.2f,ChannelType.MixedAOcurrent,"SXWUI8A4H10001"),
-    UI8AO4V(8, 4, 1.0f,ChannelType.MixedAOvolt,"SXWUI8V4X10001"),
-    UI8AO4VH(8, 4, 1.0f,ChannelType.MixedAOvolt,"SXWUI8V4H10001"),
-    UI8DOC4H(8, 4, 1.9f,ChannelType.MixedDOformC,"SXWUI8D4H10001"),
+    UI8AOV4(8, 4, 1.0f,ChannelType.MixedAOvolt,"SXWUI8V4X10001"),
+    UI8AOV4H(8, 4, 1.0f,ChannelType.MixedAOvolt,"SXWUI8V4H10001"),
     UI8DOC4(8, 4, 1.9f,ChannelType.MixedDOformC,"SXWUI8D4X10001"),
+    UI8DOC4H(8, 4, 1.9f,ChannelType.MixedDOformC,"SXWUI8D4H10001"),
     AO8(8, 4.9f,ChannelType.AOcurrent,"SXWAO8XXX10001"),
     AO8H(8, 4.9f,ChannelType.AOcurrent,"SXWAO8HXX10001"),
-    AO8V(8, 0.7f, ChannelType.AOvolt,"SXWAOV8XX10001"),
-    AO8VH(8, 0.7f,ChannelType.AOvolt,"SXWAOV8HX10001"),
+    AOV8(8, 0.7f, ChannelType.AOvolt,"SXWAOV8XX10001"),
+    AOV8H(8, 0.7f,ChannelType.AOvolt,"SXWAOV8HX10001"),
     IPIODI10(10,0f,ChannelType.DI,"SXWIPIOAA10001"),
     IPIOUIO10(10,0f,ChannelType.MixedUIO,"SXWIPIOBA10001"),
     IPIOUIO5DOFA4(5,4,0f,ChannelType.MixedUIODOformA, "SXWIPIOCA10001");
@@ -69,15 +70,29 @@ public enum ModuleType {
     }
 
 
-    public static ModuleType getTypeByChannelType(ChannelType type) throws NoModuleForSuchChannelType {
+    public static ModuleType getModuleTypeByChannelType(ChannelType type, boolean isHand) throws NoModuleForSuchChannelType {
+
         if(type.equals(ChannelType.AO)) type = ChannelType.AOcurrent;
         if(type.equals(ChannelType.DO)) type = ChannelType.DOformA;
 
         for (ModuleType mType: ModuleType.values()) {
-
-
-            if(mType.channelType.equals(type))
+            if(mType.channelType.equals(type)){
+                // in case hand mode selected
+                if(isHand){
+                    switch(mType) {
+                        case DOA12:  return DOA12H;
+                        case DOC8:  return DOC8H;
+                        case UI8AO4:  return UI8AO4H;
+                        case UI8AOV4:  return UI8AOV4H;
+                        case UI8DOC4:  return UI8DOC4H;
+                        case AO8:  return AO8H;
+                        case AOV8:  return AOV8H;
+                    }
+                }
+                // in case if hand mode is not selected
                 return mType;
+
+            }
         }
         throw new NoModuleForSuchChannelType(type);
     }

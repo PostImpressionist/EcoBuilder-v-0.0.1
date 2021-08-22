@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.effect.*?>
+<?import java.lang.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
-<?import java.lang.*?>
 <?import javafx.scene.layout.*?>
+
+<!--
+<?import javafx.geometry.*?>
+<?import javafx.scene.effect.*?>
+<?import java.lang.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Label?>-->
 
-<SplitPane dividerPositions="0.5" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FxController">
+<SplitPane dividerPositions="0.5" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="449.0" prefWidth="663.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FxController">
     <items>
-        <AnchorPane id="workingArea" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="598.0">
+        <AnchorPane id="workingArea" minHeight="0.0" minWidth="0.0" prefHeight="382.0" prefWidth="661.0">
             <children>
                 <TextField fx:id="cabinetName" alignment="CENTER" layoutX="40.0" layoutY="118.0" onAction="#buttonTariffLoader" prefHeight="25.0" prefWidth="139.0" promptText="название щита" AnchorPane.leftAnchor="40.0" />
                 <Button id="pathInput" fx:id="fireLogicButton" alignment="CENTER" contentDisplay="CENTER" layoutX="179.0" layoutY="316.0" mnemonicParsing="false" onAction="#fireLogicRoutine" prefHeight="25.0" prefWidth="208.0" style="-fx-background-color: Green;" text="Начать расчёт" textFill="WHITE" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="179.0" AnchorPane.rightAnchor="211.0">
@@ -57,7 +60,7 @@
                 </Menu>
               </menus>
             </MenuBar>
-            <GridPane fx:id="simpleChannelsGrid" layoutX="335.0" layoutY="162.0" prefHeight="86.0" prefWidth="216.0" AnchorPane.rightAnchor="55.0">
+            <GridPane fx:id="simpleChannelsGrid" layoutX="323.0" layoutY="169.0" prefHeight="86.0" prefWidth="216.0" AnchorPane.rightAnchor="122.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="99.0" minWidth="10.0" prefWidth="57.0" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="156.0" minWidth="10.0" prefWidth="151.0" />
@@ -79,10 +82,10 @@
                   <TextField fx:id="AOchannelInput" prefHeight="10.0" prefWidth="47.0" promptText="AO(UO)" GridPane.rowIndex="3" />
                </children>
             </GridPane>
-            <GridPane fx:id="wideChannelGrid" layoutX="323.0" layoutY="159.0" prefHeight="144.0" prefWidth="232.0" visible="false">
+            <GridPane fx:id="wideChannelGrid" layoutX="323.0" layoutY="169.0" prefHeight="144.0" prefWidth="280.0" visible="false">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="110.0" minWidth="10.0" prefWidth="74.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="159.0" minWidth="10.0" prefWidth="158.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="110.0" minWidth="10.0" prefWidth="64.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="205.0" minWidth="10.0" prefWidth="205.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -101,15 +104,17 @@
                   <TextField fx:id="AOvoltChannelWide" promptText="AO volt" GridPane.rowIndex="4" />
                   <TextField fx:id="UIchannelWide" promptText="UI" GridPane.rowIndex="5" />
                    <TextField fx:id="TIchannelWide" promptText="TI" GridPane.rowIndex="6" />
-                   <Label prefHeight="17.0" prefWidth="178.0" text="Цифровой вход" GridPane.columnIndex="1" />
-                  <Label prefHeight="17.0" prefWidth="178.0" text="Перекидной рел. выход 3А" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Label prefHeight="17.0" prefWidth="178.0" text="NO релейный выход 2А" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <Label prefHeight="17.0" prefWidth="178.0" text="0-20 mA, 0-10 VDC выход" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <Label prefHeight="17.0" prefWidth="178.0" text="0-10 VDC выход" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <Label prefHeight="17.0" prefWidth="178.0" text="Универсальный вход" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                  <Label prefHeight="17.0" prefWidth="178.0" text="Температурный вход" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                   <Label prefHeight="17.0" prefWidth="239.0" text="Дискретный вход" GridPane.columnIndex="1" />
+                  <Label prefHeight="17.0" prefWidth="222.0" text="Перекидной рел. выход 3А form C" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label prefHeight="17.0" prefWidth="234.0" text="NO релейный выход 2А form A" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Label prefHeight="17.0" prefWidth="246.0" text="0-20 mA, 0-10 VDC выход" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <Label prefHeight="17.0" prefWidth="232.0" text="0-10 VDC выход" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <Label prefHeight="17.0" prefWidth="249.0" text="Универсальный вход" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <Label prefHeight="17.0" prefWidth="238.0" text="Температурный вход" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                </children>
             </GridPane>
+            <TextField fx:id="reserve" layoutX="323.0" layoutY="320.0" prefHeight="25.0" prefWidth="39.0" promptText="\%" />
+            <Label layoutX="373.0" layoutY="324.0" prefHeight="17.0" prefWidth="223.0" text="Резерв свободных IO в процентах" />
             </children></AnchorPane>
         <Label id="bottomText" fx:id="bottomTextLable" alignment="CENTER" contentDisplay="CENTER" prefHeight="50.0" prefWidth="655.0" style="-fx-background-color: Orange;" text="Настройте задачу для расчёта" textAlignment="CENTER" textFill="WHITE">
             <font>
